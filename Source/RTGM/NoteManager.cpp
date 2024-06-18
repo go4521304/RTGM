@@ -14,20 +14,21 @@ ANoteManager::ANoteManager()
 // Called when the game starts or when spawned
 void ANoteManager::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	if (NoteBlockAssetClass.Get() == nullptr)
-	{
-		ensure(false);
-		return;
-	}
+    if (NoteBlockAssetClass.Get() == nullptr)
+    {
+    ensure(false);
+    return;
+    }
 
-	for (int32 NoteLoadIt = 0; NoteLoadIt <= NoteBlockLoadSize; ++NoteLoadIt)
+    FActorSpawnParameters ActorSpawnParameters;
+    ActorSpawnParameters.Owner = this;
+    FVector SpawnLoc = FVector::ZeroVector; // 초기화를 FVector::ZeroVector로 변경
+    FRotator SpawnRot = FRotator::ZeroRotator; // 초기화를 FRotator::ZeroRotator로 변경
+
+    for (int32 NoteLoadIt = 0; NoteLoadIt < NoteBlockLoadSize; ++NoteLoadIt) // <=에서 <로 변경
 	{
-		FActorSpawnParameters ActorSpawnParameters;
-		ActorSpawnParameters.Owner = this;
-		FVector SpawnLoc = {};
-		FRotator SpawnRot = {};
 		AActor* SpawnActor = GetWorld()->SpawnActor(NoteBlockAssetClass.Get(), &SpawnLoc, &SpawnRot, ActorSpawnParameters);
 		check(IsValid(SpawnActor));
 		SpawnActor->SetActorHiddenInGame(true);
@@ -38,6 +39,7 @@ void ANoteManager::BeginPlay()
 void ANoteManager::StartGame()
 {
 	bStartGame = true;
+
 } 
 
 // Called every frame
