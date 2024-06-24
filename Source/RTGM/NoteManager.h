@@ -6,6 +6,20 @@
 #include "GameFramework/Actor.h"
 #include "NoteManager.generated.h"
 
+const int32 ms_time = 1000;
+
+USTRUCT()
+struct FNoteStruct
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	int32 Time;
+
+	UPROPERTY(EditAnywhere)
+	int32 NoteType;
+};
+
 UCLASS()
 class RTGM_API ANoteManager : public AActor
 {
@@ -27,16 +41,25 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AActor> NoteBlockAssetClass;
+	UStaticMesh* NoteBlockAsset;
 
 	UPROPERTY(EditAnywhere)
 	bool bStartGame;
 
+	// sec
 	UPROPERTY(EditAnywhere)
-	int32 NoteBlockLoadSize = 100;
+	int32 NoteVisibleSecond;
+	// 시작지점에서 어디부터 보일건지 (임시로 X방향에 둘거임 추후 FVector 로 수정예정)
+	UPROPERTY(EditAnywhere)
+	float NoteStartPosition;
 
 	int32 TimeSec = 0;
-	TArray<TPair<int32, int32>> NoteList;
+	int32 NoteTimeIndex = 0;
 
-	TArray<AActor*> NoteBlock;
+	// Time / NoteType
+	UPROPERTY(EditAnywhere)
+	TArray<FNoteStruct> NoteTime;
+	// ObjectPool
+	UPROPERTY(EditAnywhere)
+	TArray<class AActor*> NoteBlock;
 };

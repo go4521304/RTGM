@@ -20,10 +20,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	void StartGame();
+	void SetNoteTime(int32 InTime);
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	void UpdateNote(int32 InTime);
 
 private:
+	int32 NoteTime;
 };

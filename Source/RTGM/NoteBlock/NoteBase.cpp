@@ -12,11 +12,19 @@ void ANoteBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ANoteBase::StartGame()
+void ANoteBase::SetNoteTime(int32 InTime)
 {
+	NoteTime = InTime;
 }
 
-void ANoteBase::Tick(float DeltaTime)
+void ANoteBase::UpdateNote(int32 InTime)
 {
-	Super::Tick(DeltaTime);
+	if (NoteTime <= InTime)
+	{
+		SetActorHiddenInGame(true);
+	}
+	else
+	{
+		SetActorHiddenInGame(false);
+	}
 }
