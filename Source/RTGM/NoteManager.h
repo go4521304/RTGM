@@ -39,6 +39,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void KeyInput(int32 InType, bool InKeyDown);
+
 private:
 	UPROPERTY(EditAnywhere)
 	UStaticMesh* NoteBlockAsset;
@@ -52,6 +54,8 @@ private:
 	// 시작지점에서 어디부터 보일건지 (임시로 X방향에 둘거임 추후 FVector 로 수정예정)
 	UPROPERTY(EditAnywhere)
 	float NoteStartPosition;
+	UPROPERTY(EditAnywhere)
+	int32 NoteHitMs;
 
 	int32 TimeSec = 0;
 	int32 NoteTimeIndex = 0;
@@ -60,6 +64,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	TArray<FNoteStruct> NoteTime;
 	// ObjectPool
-	UPROPERTY(EditAnywhere)
+	UPROPERTY()
 	TArray<class AActor*> NoteBlock;
+
+	bool bAnyKeyDown;
+	int32 OnKeyDownTime;
 };

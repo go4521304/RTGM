@@ -6,6 +6,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "NoteBlock/NoteBase.h"
 
+// 애초에 이거 폰으로 만들었어야...
 // Sets default values
 ANoteManager::ANoteManager()
 {
@@ -16,7 +17,10 @@ ANoteManager::ANoteManager()
 	bStartGame = false;
 	NoteVisibleSecond = 10;
 	NoteStartPosition = 10000.f;
+	NoteHitMs = 100;
 
+	bAnyKeyDown = false;
+	OnKeyDownTime = 0;
 }
 
 // Called when the game starts or when spawned
@@ -65,7 +69,7 @@ void ANoteManager::Tick(float DeltaTime)
 	int32 DeltaTimeSec = static_cast<int32>(DeltaTime * ms_time);
 	TimeSec += DeltaTimeSec;
 
-	UE_LOG(LogTemp, Warning, TEXT("TimeSec : %d"), TimeSec);
+	//UE_LOG(LogTemp, Warning, TEXT("TimeSec : %d"), TimeSec);
 
 	for (int32 NoteIndex = NoteTimeIndex; NoteIndex < NoteTime.Num(); ++NoteIndex)
 	{
@@ -82,8 +86,39 @@ void ANoteManager::Tick(float DeltaTime)
 			break;
 		}
 
+		// 늦은것도 체크해야하는데 일단 프로토타이핑이니까 패스
+		if (bAnyKeyDown)
+		{
+			if (NoteTimeIt.Time < OnKeyDownTime + NoteHitMs)
+			{
+				// 히트
+				UE_LOG(LogTemp, Warning, TEXT("Hit!"));
+				NoteBlock[NoteIndex]->SetActorLocation(FVector::ZeroVector);
+				NoteTimeIndex = NoteIndex;
+
+				bAnyKeyDown = false;
+				OnKeyDownTime = 0;
+				continue;
+			}
+		}
+
 		FVector NewLocation = GetActorLocation();
 		NewLocation.X += NoteStartPosition * (static_cast<float>(NoteTimeIt.Time - TimeSec) / static_cast<float>(NoteVisibleSecond * ms_time));
 		NoteBlock[NoteIndex]->SetActorLocation(NewLocation);
+	}
+}
+
+void ANoteManager::KeyInput(int32 InType, bool InKeyDown)
+{
+	// InType 은 프로토타입이므로 일단 처리안함
+	if (InKeyDown)
+	{
+		bAnyKeyDown = InKeyDown;
+		OnKeyDownTime = TimeSec;
+	}
+	else
+	{
+		bAnyKeyDown = InKeyDown;
+		OnKeyDownTime = 0;
 	}
 }
